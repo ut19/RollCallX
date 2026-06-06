@@ -18,20 +18,77 @@
 
     <div class="main-content">
       <div class="container">
-        <h2>Welcome, {{ name }}</h2>
+        <h2>Dashboard</h2>
         
+        <!-- Profile Card with Detailed Info -->
         <div class="profile-card">
           <img src="{{ profile }}" alt="Profile" class="profile-img" />
-          <div class="profile-info">
-            <h4>{{ name }}</h4>
-            <p><strong>Role:</strong> {{ role|capitalize }}</p>
-            <p><strong>Email:</strong> {{ email }}</p>
+          <div class="profile-info" style="width: 100%;">
+            <h4>{{ name }} ({{ role|capitalize }})</h4>
+            <p><strong>Email/ID:</strong> {{ email }}</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem; border-top: 1px solid rgba(30, 27, 171, 0.15); padding-top: 0.5rem; font-size: 0.85rem;">
+              {% if user.qualification %}
+              <div><strong>Qualification:</strong> {{ user.qualification }}</div>
+              {% endif %}
+              
+              {% if role == 'student' %}
+                {% if user.department %}
+                <div><strong>Department:</strong> {{ user.department }}</div>
+                {% endif %}
+                {% if user.year or user.sem %}
+                <div><strong>Timeline:</strong> {{ user.year }} | Sem {{ user.sem }}</div>
+                {% endif %}
+                {% if user.marks_10 or user.marks_12 %}
+                <div><strong>Academic History:</strong> 10th: {{ user.marks_10 }}% | 12th: {{ user.marks_12 }}%</div>
+                {% endif %}
+              {% elif role == 'teacher' %}
+                {% if user.age %}
+                <div><strong>Age:</strong> {{ user.age }} yrs</div>
+                {% endif %}
+                {% if user.workfield %}
+                <div><strong>Specialization:</strong> {{ user.workfield }}</div>
+                {% endif %}
+              {% endif %}
+            </div>
           </div>
         </div>
 
+        <!-- Dynamic Statistics Overview Panel -->
+        <div class="stats-overview">
+          {% if role == 'student' %}
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.total_classes }}</div>
+            <div class="stat-label">Classes Joined</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.total_logs }}</div>
+            <div class="stat-label">Logs Marked</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.avg_pct }}%</div>
+            <div class="stat-label">Avg Attendance</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.total_points }}</div>
+            <div class="stat-label">Score Points</div>
+          </div>
+          {% else %}
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.total_classes }}</div>
+            <div class="stat-label">Classes Created</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">{{ stats.total_enrolled }}</div>
+            <div class="stat-label">Total Students Enrolled</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Student & Teacher Quick Action Panels -->
         {% if role == 'student' %}
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-          <div class="class-card" style="gap: 0.5rem; justify-content: flex-start;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; align-items: start;">
+          <div class="class-card" style="gap: 0.5rem;">
             <h3>Join a Class</h3>
             <form method="post" style="margin: 0.5rem 0 0;">
               <input type="hidden" name="action" value="join_class" />
@@ -39,87 +96,27 @@
                 <input
                   type="text"
                   name="room_code"
-                  placeholder="Enter Class Code"
+                  placeholder="Enter 6-char Class Code"
                   required
                   style="width: 100%;"
                 />
               </div>
-              <button type="submit" class="btn-primary" style="width: 100%;">Join</button>
+              <button type="submit" class="btn-primary" style="width: 100%;">Join Class</button>
             </form>
           </div>
 
-          <div class="class-card" style="gap: 0.5rem; justify-content: flex-start;">
-            <h3>Mark Attendance</h3>
-            <form
-              id="attendanceForm"
-              method="post"
-              action="/mark_attendance"
-              enctype="multipart/form-data"
-              onsubmit="return fillLocation(event)"
-              style="margin: 0.5rem 0 0;"
-            >
-              <div class="form-group">
-                <input
-                  type="text"
-                  name="room_code"
-                  placeholder="Class Code"
-                  required
-                  style="width: 100%;"
-                />
-              </div>
-
-              <div class="form-group" style="display: none;">
-                <input
-                  type="text"
-                  name="location"
-                  id="location"
-                  placeholder="Location coordinates"
-                  required
-                />
-              </div>
-
-              <!-- Auto-filled student_id field -->
-              <input type="hidden" name="student_id" value="{{ email }}" />
-
-              <div class="form-group">
-                <label style="font-size: 0.8rem;">Upload Daily Work (PDF/Image):</label>
-                <input
-                  type="file"
-                  name="daily_work"
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                  required
-                  style="padding: 0.5rem; font-size: 0.8rem;"
-                />
-              </div>
-
-              <button type="submit" class="btn-primary" style="width: 100%;">Mark Attendance</button>
-            </form>
+          <div class="class-card" style="gap: 0.5rem; height: 100%; justify-content: space-between;">
+            <div>
+              <h3>Mark Daily Attendance</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                Open our dedicated verification gateway to share your browser GPS location and proof-of-work daily file.
+              </p>
+            </div>
+            <a href="/mark_attendance" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+              📍 Open Attendance Portal
+            </a>
           </div>
         </div>
-
-        <script>
-          function fillLocation(event) {
-            event.preventDefault();
-
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                function (position) {
-                  const lat = position.coords.latitude;
-                  const lon = position.coords.longitude;
-                  document.getElementById("location").value = `${lat},${lon}`;
-                  document.getElementById("attendanceForm").submit();
-                },
-                function (err) {
-                  alert("Please allow location access to mark attendance.");
-                }
-              );
-            } else {
-              alert("Geolocation is not supported by your browser.");
-            }
-
-            return false;
-          }
-        </script>
         {% endif %}
 
         {% if role == 'teacher' %}

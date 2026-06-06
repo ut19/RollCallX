@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mark Attendance - Cloud Attendance</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/dashboard" class="nav-brand">☁️ Cloud Attendance</a>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/logout" class="nav-btn">Logout</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="container" style="max-width: 550px;">
+        <h2>Mark Attendance</h2>
+        
+        <form
+          id="attendanceForm"
+          method="post"
+          action="/mark_attendance"
+          enctype="multipart/form-data"
+          onsubmit="return fillLocation(event)"
+        >
+          <!-- Auto-filled student ID -->
+          <input type="hidden" name="student_id" value="{{ email }}" />
+
+          <div class="form-group">
+            <label for="room_select">Select Classroom</label>
+            <select id="room_select" onchange="toggleRoomInput()" required>
+              <option value="" disabled selected>-- Choose Enrolled Class --</option>
+              {% for code, name in rooms.items() %}
+              <option value="{{ code }}">{{ code }} - {{ name }}</option>
+              {% endfor %}
+              <option value="CUSTOM_CODE">-- Enter manual classroom code --</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="manual_room_group" style="display: none;">
+            <label for="room_code">Manual Classroom Code</label>
+            <input
+              type="text"
+              name="room_code"
+              id="room_code"
+              placeholder="e.g. F3J8HI"
+            />
+          </div>
+
+          <div class="form-group" style="display: none;">
+            <input
+              type="text"
+              name="location"
+              id="location"
+              placeholder="Location coordinates"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="daily_work">Upload Daily Work (PDF/Image)</label>
+            <input
+              type="file"
+              name="daily_work"
+              id="daily_work"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 1rem;">Submit Attendance</button>
+          <a href="/dashboard" class="btn-secondary" style="text-align: center;">Cancel</a>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function toggleRoomInput() {
+        const select = document.getElementById("room_select");
+        const manualGroup = document.getElementById("manual_room_group");
+        const codeInput = document.getElementById("room_code");
+        
+        if (select.value === "CUSTOM_CODE") {
+          manualGroup.style.display = "flex";
+          codeInput.required = true;
+          codeInput.value = "";
+        } else {
+          manualGroup.style.display = "none";
+          codeInput.required = false;
+          codeInput.value = select.value;
+        }
+      }
+
+      function fillLocation(event) {
+        event.preventDefault();
+        
+        // Ensure room code value is set in the codeInput before submitting
+        const select = document.getElementById("room_select");
+        const codeInput = document.getElementById("room_code");
+        if (select.value !== "CUSTOM_CODE") {
+          codeInput.value = select.value;
+        }
+
+        if (!codeInput.value) {
+          alert("Please select a classroom or enter a code.");
+          return false;
+        }
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const lat = position.coords.latitude;
+              const lon = position.coords.longitude;
+              document.getElementById("location").value = `${lat},${lon}`;
+              document.getElementById("attendanceForm").submit();
+            },
+            function (err) {
+              alert("Location access is required to verify and mark your attendance.");
+            }
+          );
+        } else {
+          alert("Geolocation is not supported by your browser.");
+        }
+
+        return false;
+      }
+    </script>
+  </body>
+</html>

@@ -17,7 +17,7 @@
     </nav>
 
     <div class="main-content">
-      <div class="container" style="max-width: 450px;">
+      <div class="container" style="max-width: 500px;">
         <h2>Register Account</h2>
         
         {% if error %}
@@ -42,13 +42,65 @@
 
           <div class="form-group">
             <label for="role">Role</label>
-            <select name="role" id="role">
+            <select name="role" id="role" onchange="toggleRoleFields()" required>
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
             </select>
           </div>
 
-          <button type="submit" class="btn-primary">Register</button>
+          <!-- Common Qualification -->
+          <div class="form-group">
+            <label for="qualification">Highest Qualification</label>
+            <input type="text" id="qualification" name="qualification" placeholder="e.g. High School, B.Tech, M.Sc" required />
+          </div>
+
+          <!-- Student-specific fields -->
+          <div id="student_fields">
+            <div class="form-group">
+              <label for="department">Department</label>
+              <input type="text" id="department" name="department" placeholder="e.g. Computer Science, Mechanical" />
+            </div>
+
+            <div class="form-group">
+              <label for="year">Year of Study</label>
+              <select id="year" name="year">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sem">Semester</label>
+              <input type="text" id="sem" name="sem" placeholder="e.g. 3rd, 5th, 8th" />
+            </div>
+
+            <div class="form-group">
+              <label for="marks_10">10th Class Marks (%)</label>
+              <input type="text" id="marks_10" name="marks_10" placeholder="e.g. 92.4" />
+            </div>
+
+            <div class="form-group">
+              <label for="marks_12">12th Class Marks (%)</label>
+              <input type="text" id="marks_12" name="marks_12" placeholder="e.g. 89.6" />
+            </div>
+          </div>
+
+          <!-- Teacher-specific fields -->
+          <div id="teacher_fields" style="display: none;">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input type="text" id="age" name="age" placeholder="e.g. 35" />
+            </div>
+
+            <div class="form-group">
+              <label for="workfield">Field of Work / Specialization</label>
+              <input type="text" id="workfield" name="workfield" placeholder="e.g. Machine Learning, Physics" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 1rem;">Register</button>
         </form>
         
         <p class="link-muted">
@@ -56,5 +108,45 @@
         </p>
       </div>
     </div>
+
+    <script>
+      function toggleRoleFields() {
+        const role = document.getElementById("role").value;
+        const studentSection = document.getElementById("student_fields");
+        const teacherSection = document.getElementById("teacher_fields");
+
+        // Toggle visibility
+        if (role === "student") {
+          studentSection.style.display = "block";
+          teacherSection.style.display = "none";
+          
+          // Require student inputs
+          document.getElementById("department").required = true;
+          document.getElementById("sem").required = true;
+          document.getElementById("marks_10").required = true;
+          document.getElementById("marks_12").required = true;
+          
+          // Derequire teacher inputs
+          document.getElementById("age").required = false;
+          document.getElementById("workfield").required = false;
+        } else {
+          studentSection.style.display = "none";
+          teacherSection.style.display = "block";
+          
+          // Derequire student inputs
+          document.getElementById("department").required = false;
+          document.getElementById("sem").required = false;
+          document.getElementById("marks_10").required = false;
+          document.getElementById("marks_12").required = false;
+          
+          // Require teacher inputs
+          document.getElementById("age").required = true;
+          document.getElementById("workfield").required = true;
+        }
+      }
+
+      // Run onload to setup defaults
+      window.onload = toggleRoleFields;
+    </script>
   </body>
 </html>

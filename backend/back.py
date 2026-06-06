@@ -31,9 +31,35 @@ def init_db():
         name TEXT NOT NULL,
         password TEXT NOT NULL,
         role TEXT NOT NULL,
-        profile TEXT DEFAULT 'https://via.placeholder.com/70'
+        profile TEXT DEFAULT 'https://via.placeholder.com/70',
+        qualification TEXT,
+        department TEXT,
+        year TEXT,
+        sem TEXT,
+        marks_10 TEXT,
+        marks_12 TEXT,
+        age INTEGER,
+        workfield TEXT
     );
     """)
+    
+    # Run alter table commands to ensure columns exist in previously created databases
+    for col, col_type in [
+        ('qualification', 'TEXT'),
+        ('department', 'TEXT'),
+        ('year', 'TEXT'),
+        ('sem', 'TEXT'),
+        ('marks_10', 'TEXT'),
+        ('marks_12', 'TEXT'),
+        ('age', 'INTEGER'),
+        ('workfield', 'TEXT')
+    ]:
+        try:
+            conn.execute(f"ALTER TABLE users ADD COLUMN {col} {col_type};")
+        except sqlite3.OperationalError:
+            # Column already exists, safe to ignore
+            pass
+    conn.commit()
     
     conn.execute("""
     CREATE TABLE IF NOT EXISTS rooms (
@@ -334,6 +360,23 @@ def register():
         user_id = request.form['user_id']
         password = request.form['password']
         role = request.form['role']
+        
+        # Extract new profile fields
+        qualification = request.form.get('qualification', '')
+        department = request.form.get('department', '')
+        year = request.form.get('year', '')
+        sem = request.form.get('sem', '')
+        marks_10 = request.form.get('marks_10', '')
+        marks_12 = request.form.get('marks_12', '')
+        age = request.form.get('age')
+        if age:
+            try:
+                age = int(age)
+            except ValueError:
+                age = None
+        else:
+            age = None
+        workfield = request.form.get('workfield', '')
 
         conn = get_db()
         user = conn.execute("SELECT 1 FROM users WHERE user_id = ?", (user_id,)).fetchone()
@@ -342,8 +385,17 @@ def register():
             return render_template("register.html", error="User already exists.")
 
         hashed_password = generate_password_hash(password)
-        conn.execute("INSERT INTO users (user_id, name, password, role, profile) VALUES (?, ?, ?, ?, ?)",
-                     (user_id, name, hashed_password, role, "https://via.placeholder.com/70"))
+        conn.execute("""
+            INSERT INTO users (
+                user_id, name, password, role, profile, 
+                qualification, department, year, sem, 
+                marks_10, marks_12, age, workfield
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            user_id, name, hashed_password, role, "https://via.placeholder.com/70",
+            qualification, department, year, sem,
+            marks_10, marks_12, age, workfield
+        ))
         conn.commit()
         conn.close()
         return redirect("/")
@@ -411,16 +463,48 @@ def dashboard():
         for r in rooms_rows:
             rooms[r['code']] = {'subject': r['subject'], 'teacher': r['teacher_id']}
 
-    # Compute attendance counts and grades/marks
-    for c_code in classes:
-        if role == 'student':
-            total_logs = conn.execute("SELECT COUNT(*) FROM attendance WHERE room_code = ? AND user_id = ?", (c_code, user_id)).fetchone()[0]
-            attendance_percent[c_code] = min(100, total_logs * 10) # 10% per attended class
-            marks[c_code] = total_logs * 5 # 5 points per attendance log
+    # Compute statistics summary for dashboard cards
+    stats = {}
+    if role == 'student':
+        total_classes = len(classes)
+        total_logs = 0
+        total_points = 0
+        avg_pct = 0.0
+        
+        for c_code in classes:
+            total_logs_for_class = conn.execute("SELECT COUNT(*) FROM attendance WHERE room_code = ? AND user_id = ?", (c_code, user_id)).fetchone()[0]
+            attendance_percent[c_code] = min(100, total_logs_for_class * 10) # 10% per attended class
+            marks[c_code] = total_logs_for_class * 5 # 5 points per attendance log
+            
+            total_logs += total_logs_for_class
+            total_points += total_logs_for_class * 5
+            avg_pct += min(100, total_logs_for_class * 10)
+            
+        if total_classes > 0:
+            avg_pct = round(avg_pct / total_classes, 1)
         else:
-            # Teacher stats: count total students registered and total logs
+            avg_pct = 0.0
+            
+        stats = {
+            'total_classes': total_classes,
+            'total_logs': total_logs,
+            'total_points': total_points,
+            'avg_pct': avg_pct
+        }
+    else:
+        # Teacher statistics: total created classes, total logs across classes
+        total_classes = len(classes)
+        total_enrolled_students = 0
+        
+        for c_code in classes:
             registered = conn.execute("SELECT COUNT(*) FROM student_rooms WHERE room_code = ?", (c_code,)).fetchone()[0]
-            attendance_percent[c_code] = registered  # We'll display student count
+            attendance_percent[c_code] = registered # We display student count in class card
+            total_enrolled_students += registered
+            
+        stats = {
+            'total_classes': total_classes,
+            'total_enrolled': total_enrolled_students
+        }
             
     conn.close()
 
@@ -434,41 +518,67 @@ def dashboard():
                            rooms=rooms,
                            attendance_percent=attendance_percent,
                            marks=marks,
+                           stats=stats,
+                           user=user,
                            created_code=created_code)
 
-@app.route('/mark_attendance', methods=['POST'])
+@app.route('/mark_attendance', methods=['GET', 'POST'])
 def mark_attendance():
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/')
 
-    room_code = request.form['room_code'].upper()
-    location = request.form['location']
-    student_id = request.form['student_id']
-    file = request.files['daily_work']
-
-    filename = None
-    if file and file.filename:
-        filename = secure_filename(file.filename)
-        os.makedirs('uploads', exist_ok=True)
-        file.save(os.path.join('uploads', filename))
-
     conn = get_db()
-    # Check if student is enrolled in the room
-    is_joined = conn.execute("SELECT 1 FROM student_rooms WHERE student_id = ? AND room_code = ?", (user_id, room_code)).fetchone()
-    if not is_joined:
-        # Auto-enroll student if class code exists
-        class_exists = conn.execute("SELECT 1 FROM rooms WHERE code = ?", (room_code,)).fetchone()
-        if class_exists:
-            conn.execute("INSERT INTO student_rooms (student_id, room_code) VALUES (?, ?)", (user_id, room_code))
-            conn.commit()
+    user = conn.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
+    
+    if not user:
+        session.clear()
+        conn.close()
+        return redirect('/')
 
-    conn.execute("INSERT INTO attendance (room_code, user_id, timestamp, location, student_id, daily_file) VALUES (?, ?, ?, ?, ?, ?)",
-                 (room_code, user_id, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), location, student_id, filename))
-    conn.commit()
+    if user['role'] != 'student':
+        conn.close()
+        return "Access denied: Only students can mark attendance."
+
+    if request.method == 'POST':
+        room_code = request.form['room_code'].upper()
+        location = request.form['location']
+        student_id = request.form['student_id']
+        file = request.files['daily_work']
+
+        filename = None
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            os.makedirs('uploads', exist_ok=True)
+            file.save(os.path.join('uploads', filename))
+
+        # Check if student is enrolled in the room, auto-enroll if not
+        is_joined = conn.execute("SELECT 1 FROM student_rooms WHERE student_id = ? AND room_code = ?", (user_id, room_code)).fetchone()
+        if not is_joined:
+            class_exists = conn.execute("SELECT 1 FROM rooms WHERE code = ?", (room_code,)).fetchone()
+            if class_exists:
+                conn.execute("INSERT INTO student_rooms (student_id, room_code) VALUES (?, ?)", (user_id, room_code))
+                conn.commit()
+
+        conn.execute("INSERT INTO attendance (room_code, user_id, timestamp, location, student_id, daily_file) VALUES (?, ?, ?, ?, ?, ?)",
+                     (room_code, user_id, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), location, student_id, filename))
+        conn.commit()
+        conn.close()
+        return redirect('/dashboard')
+
+    # GET: fetch list of rooms student has joined to show as selection options
+    classes_rows = conn.execute("SELECT room_code FROM student_rooms WHERE student_id = ?", (user_id,)).fetchall()
+    joined_codes = [r['room_code'] for r in classes_rows]
+    
+    joined_rooms = {}
+    if joined_codes:
+        placeholders = ','.join('?' for _ in joined_codes)
+        rooms_rows = conn.execute(f"SELECT code, subject FROM rooms WHERE code IN ({placeholders})", joined_codes).fetchall()
+        for r in rooms_rows:
+            joined_rooms[r['code']] = r['subject']
+
     conn.close()
-
-    return redirect('/dashboard')
+    return render_template('mark_attendance.html', email=user_id, rooms=joined_rooms)
 
 @app.route("/view_attendance/<room_code>")
 def view_attendance(room_code):

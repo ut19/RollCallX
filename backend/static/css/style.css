@@ -1,20 +1,23 @@
-/* Import Modern Font */
+/* Import Modern Inter Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #f0f4f8; /* Soft light blue/gray background */
-  --card-bg: #ffffff; /* White card panels */
-  --border-color: #cbd5e1; /* Clean slate border */
-  --text-primary: #0f172a; /* Deep navy primary text */
-  --text-secondary: #475569; /* Slate secondary text */
+  --bg-color: #f8fafc; /* Crisp Slate-50 background */
+  --card-bg: #ffffff; /* White panels */
+  --border-color: #e2e8f0; /* Light Slate-200 border */
+  --text-primary: #0f172a; /* Slate-900 primary text */
+  --text-secondary: #475569; /* Slate-600 secondary text */
   
-  --accent-navy: #1e293b; /* Deep Navy Blue */
-  --accent-navy-hover: #0f172a; /* Darker Navy */
-  --accent-light-blue: #0284c7; /* Light Blue accent */
-  --accent-light-blue-hover: #0369a1; /* Hover Light Blue */
-  --light-blue-bg: #e0f2fe; /* Light blue accent background */
+  --accent-indigo: #4f46e5; /* Indigo-600 */
+  --accent-indigo-hover: #4338ca; /* Indigo-700 */
+  --accent-navy: #1e1b4b; /* Indigo-950 / Navy */
   
-  --border-radius: 6px;
+  --accent-green: #16a34a; /* Green-600 */
+  --accent-red: #dc2626; /* Red-600 */
+  --light-indigo-bg: #e0e7ff; /* Indigo-100 banner */
+  --stat-panel-bg: #f1f5f9; /* Slate-100 stat badge */
+  
+  --border-radius: 8px;
 }
 
 /* Reset and Base Styles */
@@ -34,24 +37,24 @@ body {
   line-height: 1.5;
 }
 
-/* Navigation Bar - Solid Navy background with white/light-blue links */
+/* Crisp White SaaS Navbar with Indigo Brand Text */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--accent-navy);
-  border-bottom: 1px solid var(--accent-navy-hover);
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
   padding: 0.75rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .nav-brand {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff; /* White logo */
+  font-weight: 700;
+  color: var(--accent-indigo);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -65,7 +68,7 @@ body {
 }
 
 .nav-link {
-  color: #cbd5e1; /* Slate off-white link */
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
@@ -74,14 +77,14 @@ body {
 }
 
 .nav-link:hover, .nav-link.active {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-indigo);
+  background-color: #f1f5f9;
 }
 
 .nav-btn {
   background-color: transparent;
-  color: #fda4af; /* Soft red logout text */
-  border: 1px solid rgba(253, 164, 175, 0.4);
+  color: var(--accent-red);
+  border: 1px solid var(--border-color);
   padding: 0.4rem 0.8rem;
   border-radius: var(--border-radius);
   font-weight: 500;
@@ -91,12 +94,11 @@ body {
 }
 
 .nav-btn:hover {
-  background-color: rgba(253, 164, 175, 0.15);
-  color: #ffffff;
-  border-color: #fda4af;
+  background-color: #fef2f2;
+  border-color: rgba(220, 38, 38, 0.2);
 }
 
-/* Main Content Wrapper */
+/* Main Layout Wrapper */
 .main-content {
   flex: 1;
   display: flex;
@@ -105,7 +107,7 @@ body {
   padding: 2.5rem 1rem;
 }
 
-/* Solid bordered card layouts, no animations */
+/* White card with slate border, soft shadow, no animations */
 .container {
   width: 100%;
   max-width: 850px;
@@ -113,13 +115,13 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 /* Headings */
 h1, h2, h3, h4 {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--accent-navy);
   margin-bottom: 1rem;
 }
 
@@ -169,21 +171,21 @@ select {
   font-family: inherit;
   font-size: 0.9rem;
   outline: none;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 select:focus {
-  border-color: var(--accent-light-blue);
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  border-color: var(--accent-indigo);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
-/* Buttons - Light Blue active state, flat design */
+/* Buttons - Indigo solid, flat design */
 .btn-primary {
-  background-color: var(--accent-light-blue);
+  background-color: var(--accent-indigo);
   color: #ffffff;
-  border: 1px solid rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(79, 70, 229, 0.15);
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius);
   font-size: 0.9rem;
@@ -197,12 +199,12 @@ select:focus {
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-light-blue-hover);
+  background-color: var(--accent-indigo-hover);
 }
 
 .btn-secondary {
   background-color: #ffffff;
-  color: var(--accent-navy);
+  color: var(--text-primary);
   border: 1px solid var(--border-color);
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius);
@@ -217,17 +219,17 @@ select:focus {
 }
 
 .btn-secondary:hover {
-  background-color: #f1f5f9;
-  border-color: var(--accent-navy);
+  background-color: #f8fafc;
+  border-color: var(--text-secondary);
 }
 
-/* Profile Section with Light Blue background and Navy info */
+/* Profile Card - Soft Indigo background */
 .profile-card {
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  background-color: var(--light-blue-bg);
-  border: 1px solid #bae6fd;
+  background-color: var(--light-indigo-bg);
+  border: 1px solid #c7d2fe;
   border-radius: var(--border-radius);
   padding: 1rem;
   margin-bottom: 1.5rem;
@@ -237,18 +239,51 @@ select:focus {
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  border: 2px solid var(--accent-light-blue);
+  border: 2px solid var(--accent-indigo);
   object-fit: cover;
 }
 
 .profile-info h4 {
   margin-bottom: 0.15rem;
   font-size: 1.1rem;
+  color: var(--accent-navy);
 }
 
 .profile-info p {
-  color: var(--text-secondary);
+  color: var(--accent-navy);
   font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* Dashboard statistics overview panels */
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-item {
+  background-color: var(--stat-panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-indigo);
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Class Cards Grid */
@@ -271,14 +306,14 @@ select:focus {
 }
 
 .class-card:hover {
-  border-color: var(--accent-light-blue);
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+  border-color: var(--accent-indigo);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.06);
 }
 
 .class-header h4 {
   font-size: 1.05rem;
   margin-bottom: 0.25rem;
-  color: var(--accent-light-blue);
+  color: var(--accent-indigo);
 }
 
 .class-header p {
@@ -291,7 +326,7 @@ select:focus {
   justify-content: space-between;
   font-size: 0.8rem;
   color: var(--text-secondary);
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color);
   padding-top: 0.5rem;
 }
 
@@ -310,7 +345,7 @@ select:focus {
   text-decoration: none;
 }
 
-/* Table formatting */
+/* Table layout */
 .table-wrapper {
   overflow-x: auto;
   margin-top: 1rem;
@@ -332,7 +367,7 @@ th, td {
 }
 
 th {
-  background-color: #f1f5f9;
+  background-color: #f8fafc;
   color: var(--accent-navy);
   font-weight: 600;
 }
@@ -349,7 +384,7 @@ tr:hover td {
   background-color: #f8fafc;
 }
 
-/* Error/Success alerts */
+/* Alerts */
 .alert {
   padding: 0.6rem 0.8rem;
   border-radius: var(--border-radius);
@@ -361,17 +396,17 @@ tr:hover td {
 
 .alert-error {
   background-color: #ffebe9;
-  border: 1px solid rgba(207, 34, 46, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.15);
   color: var(--accent-red);
 }
 
 .alert-success {
   background-color: #dafbe1;
-  border: 1px solid rgba(46, 164, 79, 0.15);
-  color: #1a7f37;
+  border: 1px solid rgba(22, 163, 74, 0.15);
+  color: var(--accent-green);
 }
 
-/* Captcha styling */
+/* Captcha Badge styling */
 .captcha-container {
   display: flex;
   align-items: center;
@@ -399,7 +434,7 @@ tr:hover td {
 }
 
 .link-muted a {
-  color: var(--accent-light-blue);
+  color: var(--accent-indigo);
   text-decoration: none;
   font-weight: 500;
 }
@@ -424,7 +459,7 @@ input[type="file"]:hover {
   background-color: #f1f5f9;
 }
 
-/* About Page layout features */
+/* About Page Panel Grid features */
 .about-features {
   display: grid;
   grid-template-columns: 1fr 1fr;
