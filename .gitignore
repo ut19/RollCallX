@@ -6,3 +6,5 @@ backend/*.json
 data/*.json
 data/*.db
 .DS_Store
+__pycache__/
+*.pyc
