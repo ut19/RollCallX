@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About - Cloud Attendance</title>
+    <title>RollCallX</title>
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
   <body>
     <nav class="navbar">
       {% if logged_in %}
-      <a href="/dashboard" class="nav-brand">☁️ Cloud Attendance</a>
+      <a href="/dashboard" class="nav-brand">☁️ RollCallX</a>
       <div class="nav-links">
         <a href="/dashboard" class="nav-link">Dashboard</a>
         <a href="/about" class="nav-link active">About</a>
         <a href="/logout" class="nav-btn">Logout</a>
       </div>
       {% else %}
-      <a href="/" class="nav-brand">☁️ Cloud Attendance</a>
+      <a href="/" class="nav-brand">☁️ RollCallX</a>
       <div class="nav-links">
         <a href="/" class="nav-link">Login</a>
         <a href="/register" class="nav-link">Register</a>
@@ -28,8 +28,18 @@
     <div class="main-content">
       <div class="container">
         <h2>About Cloud Attendance</h2>
-        <p style="color: var(--text-secondary); text-align: center; max-width: 600px; margin: 1rem auto 2rem; line-height: 1.6;">
-          Cloud Attendance is a premium, secure, and modern attendance tracking application. Designed to simplify classroom management, it uses advanced verification techniques to keep data secure and reliable.
+        <p
+          style="
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin: 1rem auto 2rem;
+            line-height: 1.6;
+          "
+        >
+          Cloud Attendance is a premium, secure, and modern attendance tracking
+          application. Designed to simplify classroom management, it uses
+          advanced verification techniques to keep data secure and reliable.
         </p>
 
         <div class="about-features">
@@ -37,7 +47,11 @@
             <span class="feature-icon">🔒</span>
             <div class="feature-info">
               <h4>Secure Password Hashing</h4>
-              <p>All user passwords undergo industrial-grade, secure hashing (scrypt/PBKDF2) before storage, eliminating any exposure of raw text credentials.</p>
+              <p>
+                All user passwords undergo industrial-grade, secure hashing
+                (scrypt/PBKDF2) before storage, eliminating any exposure of raw
+                text credentials.
+              </p>
             </div>
           </div>
 
@@ -45,7 +59,11 @@
             <span class="feature-icon">💾</span>
             <div class="feature-info">
               <h4>SQLite Storage Engine</h4>
-              <p>Migrated from transient JSON configurations to SQLite3 relational persistence. Ensures concurrent write safety and data permanence across server restarts.</p>
+              <p>
+                Migrated from transient JSON configurations to SQLite3
+                relational persistence. Ensures concurrent write safety and data
+                permanence across server restarts.
+              </p>
             </div>
           </div>
 
@@ -53,7 +71,10 @@
             <span class="feature-icon">📍</span>
             <div class="feature-info">
               <h4>Geolocation Verification</h4>
-              <p>Verifies physical classroom attendance by validating real-time GPS coordinates of student submissions directly in the browser.</p>
+              <p>
+                Verifies physical classroom attendance by validating real-time
+                GPS coordinates of student submissions directly in the browser.
+              </p>
             </div>
           </div>
 
@@ -61,12 +82,24 @@
             <span class="feature-icon">📄</span>
             <div class="feature-info">
               <h4>Proof of Work Uploads</h4>
-              <p>Enables file attachments (such as PDF, JPG, PNG daily work files) alongside geolocation coordinates for comprehensive evidence of active attendance.</p>
+              <p>
+                Enables file attachments (such as PDF, JPG, PNG daily work
+                files) alongside geolocation coordinates for comprehensive
+                evidence of active attendance.
+              </p>
             </div>
           </div>
         </div>
 
-        <div style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem;">
+        <div
+          style="
+            text-align: center;
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+          "
+        >
           {% if logged_in %}
           <a class="btn-primary" href="/dashboard">Go to Dashboard</a>
           {% else %}
