@@ -1,1 +1,1 @@
-web: gunicorn --chdir backend back:app
+web: gunicorn app:app
