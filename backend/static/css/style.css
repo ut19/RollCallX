@@ -2,20 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #f8fafc; /* Crisp Slate-50 background */
-  --card-bg: #ffffff; /* White panels */
-  --border-color: #e2e8f0; /* Light Slate-200 border */
-  --text-primary: #0f172a; /* Slate-900 primary text */
-  --text-secondary: #475569; /* Slate-600 secondary text */
+  --bg-color: #f0f4f8; /* Soft slate/blue gray */
+  --card-bg: #ffffff; /* White card backgrounds */
+  --border-color: #cbd5e1; /* Slate border */
+  --text-primary: #0f172a; /* Navy text */
+  --text-secondary: #475569; /* Slate secondary text */
   
-  --accent-indigo: #4f46e5; /* Indigo-600 */
-  --accent-indigo-hover: #4338ca; /* Indigo-700 */
-  --accent-navy: #1e1b4b; /* Indigo-950 / Navy */
+  --accent-indigo: #4f46e5; /* Indigo accent */
+  --accent-indigo-hover: #4338ca; /* Indigo hover */
+  --accent-navy: #1e1b4b; /* Navy */
   
-  --accent-green: #16a34a; /* Green-600 */
-  --accent-red: #dc2626; /* Red-600 */
-  --light-indigo-bg: #e0e7ff; /* Indigo-100 banner */
-  --stat-panel-bg: #f1f5f9; /* Slate-100 stat badge */
+  --accent-green: #16a34a; 
+  --accent-red: #dc2626; 
+  --light-indigo-bg: #e0e7ff; /* Soft indigo banner */
+  --stat-panel-bg: #eff6ff; /* Soft light blue stat panel */
   
   --border-radius: 8px;
 }
@@ -28,7 +28,7 @@
 }
 
 body {
-  background-color: var(--bg-color);
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #eff6ff 100%);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   min-height: 100vh;
@@ -37,7 +37,7 @@ body {
   line-height: 1.5;
 }
 
-/* Crisp White SaaS Navbar with Indigo Brand Text */
+/* Navbar */
 .navbar {
   position: sticky;
   top: 0;
@@ -98,7 +98,7 @@ body {
   border-color: rgba(220, 38, 38, 0.2);
 }
 
-/* Main Layout Wrapper */
+/* Content Spacing */
 .main-content {
   flex: 1;
   display: flex;
@@ -107,15 +107,16 @@ body {
   padding: 2.5rem 1rem;
 }
 
-/* White card with slate border, soft shadow, no animations */
+/* White containers with thin borders */
 .container {
   width: 100%;
   max-width: 850px;
-  background-color: var(--card-bg);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid var(--border-color);
+  border-top: 4px solid var(--accent-indigo); /* Premium top accent bar */
   border-radius: var(--border-radius);
   padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
 }
 
 /* Headings */
@@ -181,7 +182,7 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
-/* Buttons - Indigo solid, flat design */
+/* Buttons */
 .btn-primary {
   background-color: var(--accent-indigo);
   color: #ffffff;
@@ -223,16 +224,17 @@ select:focus {
   border-color: var(--text-secondary);
 }
 
-/* Profile Card - Soft Indigo background */
+/* Profile banner */
 .profile-card {
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  background-color: var(--light-indigo-bg);
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
   border: 1px solid #c7d2fe;
   border-radius: var(--border-radius);
   padding: 1rem;
   margin-bottom: 1.5rem;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .profile-img {
@@ -255,7 +257,7 @@ select:focus {
   opacity: 0.8;
 }
 
-/* Dashboard statistics overview panels */
+/* Stats panel */
 .stats-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -264,11 +266,13 @@ select:focus {
 }
 
 .stat-item {
-  background-color: var(--stat-panel-bg);
-  border: 1px solid var(--border-color);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe; /* Subtle light blue outline */
+  border-bottom: 3px solid var(--accent-indigo); /* Bottom indigo accent */
   border-radius: var(--border-radius);
   padding: 1rem;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .stat-val {
@@ -286,7 +290,7 @@ select:focus {
   letter-spacing: 0.05em;
 }
 
-/* Class Cards Grid */
+/* Class Grid cards with custom Left Side Indigo Border Strip */
 .class-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -295,19 +299,22 @@ select:focus {
 }
 
 .class-card {
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
   border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent-indigo); /* Left side color strip */
   border-radius: var(--border-radius);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .class-card:hover {
   border-color: var(--accent-indigo);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.06);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
 }
 
 .class-header h4 {
@@ -345,7 +352,7 @@ select:focus {
   text-decoration: none;
 }
 
-/* Table layout */
+/* Tables */
 .table-wrapper {
   overflow-x: auto;
   margin-top: 1rem;
@@ -406,7 +413,7 @@ tr:hover td {
   color: var(--accent-green);
 }
 
-/* Captcha Badge styling */
+/* Captcha */
 .captcha-container {
   display: flex;
   align-items: center;
@@ -425,7 +432,7 @@ tr:hover td {
   color: var(--text-primary);
 }
 
-/* Links */
+/* Link utilities */
 .link-muted {
   color: var(--text-secondary);
   text-decoration: none;
@@ -443,7 +450,7 @@ tr:hover td {
   text-decoration: underline;
 }
 
-/* File upload */
+/* Upload input */
 input[type="file"] {
   background-color: #f8fafc;
   border: 1px dashed var(--border-color);
@@ -459,7 +466,7 @@ input[type="file"]:hover {
   background-color: #f1f5f9;
 }
 
-/* About Page Panel Grid features */
+/* About Page features list panels */
 .about-features {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -468,12 +475,18 @@ input[type="file"]:hover {
 }
 
 .feature-card {
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 1.25rem;
   display: flex;
   gap: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.feature-card:hover {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-color: var(--accent-indigo);
 }
 
 .feature-icon {
