@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class Details - Cloud Attendance</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/dashboard" class="nav-brand">☁️ Cloud Attendance</a>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/logout" class="nav-btn">Logout</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="container">
+        <h2>📘 {{ room_code }} - Class Details</h2>
+        
+        <div class="profile-card" style="margin-bottom: 2rem;">
+          <div class="profile-info" style="width: 100%;">
+            <p style="color: var(--text-primary); font-size: 1.1rem; margin-bottom: 0.5rem;">
+              <strong>Student Name:</strong> {{ student.name }}
+            </p>
+            <p style="color: var(--text-primary); font-size: 1.1rem; margin-bottom: 0.5rem;">
+              <strong>Student ID:</strong> {{ student_id }}
+            </p>
+            <p style="color: var(--text-secondary); font-size: 1rem;">
+              <strong>Total Attendance Logs:</strong> {{ total }}
+            </p>
+          </div>
+        </div>
+
+        <h3>Your Attendance Records</h3>
+        {% if logs %}
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Location</th>
+                <th>Daily Work</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in logs %}
+              <tr>
+                <td>{{ record.timestamp }}</td>
+                <td>
+                  {% if record.location %}
+                  <a href="https://www.google.com/maps?q={{ record.location }}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">
+                    📍 {{ record.location }}
+                  </a>
+                  {% else %}
+                  No Location
+                  {% endif %}
+                </td>
+                <td>
+                  {% if record.daily_file %}
+                  <a href="/uploads/{{ record.daily_file }}" target="_blank" style="color: var(--accent-cyan); text-decoration: none; font-weight: 500;">
+                    📄 View File
+                  </a>
+                  {% else %}
+                  <span style="color: var(--text-secondary);">No File</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p style="text-align: center; color: var(--text-secondary); margin: 2rem 0;">
+          You haven't marked attendance in this class yet.
+        </p>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a class="btn-secondary" href="/dashboard">← Back to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

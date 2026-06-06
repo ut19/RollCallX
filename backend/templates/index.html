@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Cloud Attendance</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/" class="nav-brand">☁️ Cloud Attendance</a>
+      <div class="nav-links">
+        <a href="/" class="nav-link active">Login</a>
+        <a href="/register" class="nav-link">Register</a>
+        <a href="/about" class="nav-link">About</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="container" style="max-width: 450px;">
+        <h2>Login</h2>
+        
+        {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="post">
+          <div class="form-group">
+            <label for="user_id">Email/User ID</label>
+            <input type="text" id="user_id" name="user_id" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <div class="form-group">
+            <label>CAPTCHA Verification</label>
+            <div class="captcha-container">
+              <span class="captcha-badge">{{ captcha }}</span>
+            </div>
+            <input
+              type="text"
+              name="captcha_input"
+              placeholder="Enter CAPTCHA Code"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary">Sign In</button>
+        </form>
+        
+        <p class="link-muted">New user? <a href="/register">Register here</a></p>
+      </div>
+    </div>
+  </body>
+</html>

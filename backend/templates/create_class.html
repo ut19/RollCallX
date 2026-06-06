@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Class</title>
+  </head>
+  <body>
+    <h1>Create a New Class</h1>
+    <form method="POST">
+      <label>Class Name:</label>
+      <input type="text" name="class_name" required />
+      <button type="submit">Create</button>
+    </form>
+
+    {% if created_code %}
+    <h3>Class created!</h3>
+    <p>Your class code: <strong>{{ created_code }}</strong></p>
+    {% endif %}
+
+    <br />
+    <a href="/dashboard">Back to Dashboard</a>
+  </body>
+</html>

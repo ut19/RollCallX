@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Records - Cloud Attendance</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/dashboard" class="nav-brand">☁️ Cloud Attendance</a>
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/logout" class="nav-btn">Logout</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="container">
+        <h2>📊 Attendance Records - {{ room_code }}</h2>
+        
+        {% if data %}
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Timestamp</th>
+                <th>Location</th>
+                <th>Daily Work</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in data %}
+              <tr>
+                <td>{{ record.student_id }}</td>
+                <td>{{ record.timestamp }}</td>
+                <td>
+                  {% if record.location %}
+                  <a href="https://www.google.com/maps?q={{ record.location }}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">
+                    📍 {{ record.location }}
+                  </a>
+                  {% else %}
+                  No Location
+                  {% endif %}
+                </td>
+                <td>
+                  {% if record.file %}
+                  <a href="/uploads/{{ record.file }}" target="_blank" style="color: var(--accent-cyan); text-decoration: none; font-weight: 500;">
+                    📄 View File
+                  </a>
+                  {% else %}
+                  <span style="color: var(--text-secondary);">No File</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p style="text-align: center; color: var(--text-secondary); margin: 2rem 0;">
+          No attendance logs recorded for this class yet.
+        </p>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <a class="btn-secondary" href="/dashboard">← Back to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

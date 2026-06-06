@@ -1,0 +1,8 @@
+backend/venv/
+backend/uploads/*
+backend/data/*.json
+backend/data/*.db
+backend/*.json
+data/*.json
+data/*.db
+.DS_Store
