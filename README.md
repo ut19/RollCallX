@@ -1,6 +1,6 @@
-# Cloud Attendance System
+# RollCallX
 
-Cloud Attendance is a secure, lightweight, and modern classroom attendance management application written in Flask and SQLite3. It is designed to verify student attendance through geolocation tracking and proof-of-work file uploads.
+RollCallX is a secure, lightweight, and modern classroom attendance management application written in Flask and SQLite3. It is designed to verify student attendance through geolocation tracking and proof-of-work file uploads.
 
 ## Features
 
